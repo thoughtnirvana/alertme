@@ -19,11 +19,13 @@ require 'open-uri'
        f1.puts(url)
        doc = Nokogiri::HTML(open(url))
        doc.search('//a[@class="class1"]').each do |link|
-         stock = link.content
+         #stock = link.content
          code = (/[0-9]+/.match link['href']).to_s
-         stock.concat(" ")
-         stock.concat(code)
-         f.puts(stock)
+         stock = link.content
+         #stock.concat(" ")
+         #stock.concat(code)
+         str = "'" + code + "', '" + stock + "'"
+         f.puts(str)
        end
        doc.search('//font/a').each do |link|
          ifnext = (/Next/.match link).to_s;
