@@ -5,7 +5,8 @@ from alertme.stocks.models import Stock
 from django.core.exceptions import ValidationError
 import re
 
-# Create your models here.
+# Extends django User model and stores
+# user's phone number and alert status.
 class UserProfile(models.Model):
   user = models.ForeignKey(User, unique=True)
   ph = models.CharField(max_length=12)
@@ -16,6 +17,8 @@ class UserProfile(models.Model):
     if (len(self.ph) < 12) or (not re.match("^[0-9]*$", self.ph)):
         raise ValidationError("Ph no should be exactly 12 chars including country code and can only contain digits")
 
+# Relational model between stock list and users to list
+# all the alerts
 class StockUserRelation(models.Model):
   user = models.ForeignKey(User)
   stock = models.ForeignKey(Stock)

@@ -1,10 +1,8 @@
+# scrapes the stock id and stock name for entire listing on BSE website
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 
- #Add/Remove required letters - some letters might not be the starting letter for any company name
- # alphabet = ["A","B","C","D","E","F","G","H","J","I","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
- # To choose all letters
  f = File.open('StockCodes', 'w+')
  f1 = File.open('urls', 'w+')
  alphabet = ('A'..'Z').to_a

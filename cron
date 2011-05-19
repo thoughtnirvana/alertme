@@ -1,3 +1,7 @@
+# update-cache.py runs every 30 mins to keep fresh data in
+# cache. send-alert.py runs every 45 minutes to send alert 
+# to registere users
+#
 #*/30 * * * * python /path/to/alertme/update-cache.py
 #*/45 * * * * python /path/to/alertme/send-alert.py
 

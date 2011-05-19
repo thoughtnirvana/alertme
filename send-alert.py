@@ -1,3 +1,10 @@
+# checks the status of alert set by each user and sends email or 
+# sms alerts accordingly. The comparison data is stored in memcache 
+# by update-cache.py and lower/upper limit is set by the user in
+# stock-user relational table
+# The SMS push is commented. Anybody using it can quote his sms gateway
+# push url for sms alerts.
+
 from django.core.management import setup_environ
 import settings
 setup_environ(settings)
@@ -34,15 +41,15 @@ def sendAlert():
           if alert.min_price > 0:
             if current_price <= alert.min_price:
               message = 'Hi ' + name + ". "  + stock_data[0]['name'] + ' has reached the minimum price of ' + stock_data[0]['l_cur']
-              print  message
               email = EmailMessage('Stock Alert', message, to=[email])
               email.send()
+              # put your sms gateway push API for sending SMS alerts
           if alert.max_price > 0:
             if current_price >= alert.max_price:
               message = 'Hi ' + name + ". "  + stock_data[0]['name'] + ' has reached the maximum price of ' + stock_data[0]['l_cur']
-              print  message
               email = EmailMessage('Stock Alert', message, to=[email])
               email.send()
+              # put your sms gateway push API for sending SMS alerts
 
 sendAlert()
 

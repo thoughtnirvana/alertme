@@ -1,14 +1,14 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
-from alertme.accounts.models import *
-from alertme.stocks.models import *
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-import pdb, re, json
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.contrib import messages
 from django.core.cache import cache
+from alertme.accounts.models import *
+from alertme.stocks.models import *
+import pdb, re, json
 
 def signup(request):
   if request.user.is_authenticated():
@@ -43,6 +43,8 @@ def login_view(request):
     else:
       return render_to_response('accounts/login.html',context_instance=RequestContext(request))
 
+# show the settings page to  user. In case of invalid submission, re-display the page
+# along with an error message, using django message framework
 @login_required
 def user_settings(request):
   user = request.user
@@ -85,6 +87,8 @@ def user_settings(request):
     else:
       return render_to_response('accounts/user-settings.html', context_instance=RequestContext(request))
 
+# Let user set lower and upper limit for alerts on different stocks. In case of invalid
+# submissionre-display the page along with an error message
 @login_required
 def user_alerts(request):
   user = request.user
@@ -164,5 +168,5 @@ def home(request):
   return render_to_response('accounts/user-home.html', context_instance=RequestContext(request))
 
 def invalid(request):
-  html = "<html><body>Invalid login credentials</body></html>"
+  html = "<html><body>Invalid login credentials <a href='/login/'>Retry</a></body></html>"
   return HttpResponse(html)
