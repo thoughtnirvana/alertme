@@ -1,0 +1,40 @@
+{% include "base.html" %}
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form action="/alerts/" method="post" accept-charset="utf-8">
+  {% csrf_token %}
+  <ul>
+    <table border=1>
+      <tr>
+        <th> Name </th>
+        <th> Id </th>
+        <th> Exchange </th>
+        <th> Current price </th>
+        <th> Upper Limit </th>
+        <th> Lower Limit </th>
+      </tr>
+      {% for result in result_list %}
+      <tr>
+        <td><input type="text" name="stockname" value="{{ result.name}}" id="stockname" readonly="readonly"/></td>
+        <td><input type="text" name="stockid" value="{{ result.id}}" id="stockid" readonly="readonly"/></td>
+        <td> {{ result.exchange }} </td>
+        <td> {{ result.current_price }} </td>
+        <td><input type="text" name="upperlimit" value="{{ result.max_price}}" id="upperlimit"/></td>
+        <td><input type="text" name="lowerlimit" value="{{ result.min_price}}" id="lowerlimit"/></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </ul>
+  <p><input type="submit" value="Update"></p>
+</form>
+
+<a href="/home/">Click here to go to home page</a>
+{% endblock %}

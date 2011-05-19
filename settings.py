@@ -19,7 +19,12 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
+CACHES = {
+  'default': {
+    'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    'LOCATION': '127.0.0.1:11211',
+    }
+}
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -62,6 +67,9 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+LOGIN_URL = '/register/'
+LOGIN_REDIRECT_URL= '/home/'
+
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
@@ -83,10 +91,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '*2-pu77=sn78rl0#-u-g_0)v!$&rt5++vmh#-y1@=ps0ooy-uo'
-
-# cache backend
-CACHE_BACKEND = "memcached://127.0.0.1:11211/?timeout=240&max_entries=20000&cull_frequency=2"
+SECRET_KEY = '6-4si5*13ki$m&#x2+4mul&k(5*2)zah31cv*7+enj1f!k)5z7'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -95,17 +100,19 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+)
+
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 )
-
-TEMPLATE_CONTEXT_PROCESSORS = ()
 
 ROOT_URLCONF = 'alertme.urls'
 
@@ -113,6 +120,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/home/ujjawal/alertme/templates/',
 )
 
 INSTALLED_APPS = (
@@ -123,12 +131,16 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admindocs',
     'alertme.stocks',
-    'alertme.users',
+    'alertme.accounts',
 )
+
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

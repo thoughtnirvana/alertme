@@ -1,0 +1,7 @@
+{% include "base.html" %}
+{% block content %}
+<H3>Logged in as {{ user.username }} </H3>
+<a href="/settings/">Settings</a>
+<a href="/alerts/">Alerts</a>
+<a href="/logout/">Log out</a>
+{% endblock %}

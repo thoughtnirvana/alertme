@@ -1,0 +1,28 @@
+{% include "base.html" %}
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<form action="/settings/" method="post" accept-charset="utf-8">
+{% csrf_token %}
+<label for="PhNo">Mobile No(12 Digits including country code)</label><input type="text" name="ph" value= "{{ ph }}" id="ph" />
+  {% if email_alert %}
+  <input type="checkbox" name="emailalerts" checked=True value= "email" id="emailalerts">Email Alerts</input>
+  {% else %}
+  <input type="checkbox" name="emailalerts" value= "email" id="emailalerts">Email Alerts</input>
+  {% endif %}
+  {% if sms_alert %}
+  <input type="checkbox" name="smsalerts" checked=True value="sms" id="smsalerts">SMS Alerts</input>
+  {% else %}
+  <input type="checkbox" name="smsalerts" value="sms" id="smsalerts">SMS Alerts</input>
+  {% endif %}
+  <p><input type="submit" value="Update"></p>
+</form>
+
+<a href="/home/">Click here to go to home page</a>
+{% endblock %}

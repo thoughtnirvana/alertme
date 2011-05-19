@@ -1,0 +1,11 @@
+INSERT INTO stocks_stock VALUES('532696', 'Educomp Sol', 'BSE');
+INSERT INTO stocks_stock VALUES('500209', 'Infosys', 'BSE');
+INSERT INTO stocks_stock VALUES('506134', 'Intellivate Cap', 'BSE');
+INSERT INTO stocks_stock VALUES('533398', 'MUTHOOT FIN', 'BSE');
+INSERT INTO stocks_stock VALUES('532299', 'TV Eighteen', 'BSE');
+INSERT INTO stocks_stock VALUES('533217', 'Hindustan Media', 'BSE');
+INSERT INTO stocks_stock VALUES('532706', 'Inox Leisure', 'BSE');
+INSERT INTO stocks_stock VALUES('532689', 'PVR', 'BSE');
+INSERT INTO stocks_stock VALUES('533155', 'JUBL FOOD', 'BSE');
+INSERT INTO stocks_stock VALUES('532848', 'Delta Corp', 'BSE');
+INSERT INTO stocks_stock VALUES('523261', 'Venkys India', 'BSE');
