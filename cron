@@ -1,0 +1,3 @@
+#*/30 * * * * python /path/to/alertme/update-cache.py
+#*/45 * * * * python /path/to/alertme/send-alert.py
+

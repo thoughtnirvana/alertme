@@ -1,4 +1,3 @@
-# Create your views here.
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from alertme.accounts.models import *
@@ -66,7 +65,8 @@ def user_settings(request):
       if (len(ph) < 12) or (not re.match("^[0-9]*$", ph)):
         raise ValidationError("Mobile no should be exactly 12 chars including country code and can only contain digits")
     except ValidationError,  e:
-      non_field_errors = e.message_dict[NON_FIELD_ERRORS]
+      message_dict = e.update_error_dict({})
+      non_field_errors = message_dict[NON_FIELD_ERRORS]
       messages.error(request, non_field_errors)
       return render_to_response('accounts/user-settings.html', context_instance=RequestContext(request))
     if not userinfo:
@@ -95,19 +95,31 @@ def user_alerts(request):
   if not userinfo[0]['email_alert'] and not userinfo[0]['sms_alert']:
      messages.error(request, 'You have not enabled alerts yet. Enable at least one of them')
      return render_to_response('accounts/user-settings.html', userinfo[0], context_instance=RequestContext(request))
+  stocks = Stock.objects.all().values()
+  user_stock_relation = StockUserRelation.objects.filter(user=user)
+  list_for_template = []
+  for i in stocks:
+    stock_id = i['id']
+    stock_data = cache.get(stock_id)
+    if stock_data is None:
+      continue
+    stock_data = json.loads(stock_data)
+    if  not re.search('Rs', stock_data[0]['l_cur']):
+      continue
+    current_price = stock_data[0]['l_cur']
+    i['current_price'] = current_price
+    if user_stock_relation:
+      stock = Stock.objects.filter(id=stock_id)
+      user_stock = StockUserRelation.objects.filter(user=user, stock=stock)
+      if user_stock:
+        i['max_price'] = user_stock[0].max_price
+        i['min_price'] = user_stock[0].min_price
+        i['alert-set'] = True
+    list_for_template.append(i)
   if request.method == 'POST':
-    #userinfo = UserProfile.objects.filter(user=user)
-    #if userinfo:
-    #  userinfo = UserProfile.objects.get(user=user)
-    #  if userinfo:
-    #    ph = userinfo.ph
-    #if request.POST.getlist('stockid'):
     stock_id_list = request.POST.getlist('stockid')
     length = len(stock_id_list)
-      #existing = StockUserRelation.objects.filter(user=user, stock=stock_id)
-    #if request.POST.getlist('upperlimit'):
     max_price_list = request.POST.getlist('upperlimit')
-    #if request.POST.getlist('lowerlimit'):
     min_price_list = request.POST.getlist('lowerlimit')
     if length>0:
       for i in range(length):
@@ -129,9 +141,10 @@ def user_alerts(request):
           if max_price_list[i] and min_price_list[i] and max_price_list[i]<min_price_list[i]:
             raise ValidationError("Max price should be greater than Min price")
         except ValidationError,  e:
-          non_field_errors = e.message_dict[NON_FIELD_ERRORS]
+          message_dict = e.update_error_dict({})
+          non_field_errors = message_dict[NON_FIELD_ERRORS]
           messages.error(request, non_field_errors)
-          return render_to_response('accounts/user-alerts.html', context_instance=RequestContext(request))
+          return render_to_response('accounts/user-alerts.html',{'result_list': list_for_template}, context_instance=RequestContext(request))
         stock_id=Stock.objects.get(id=stock_id_list[i])
         existing = StockUserRelation.objects.filter(user=user, stock=stock_id)
         if not existing:
@@ -144,39 +157,11 @@ def user_alerts(request):
           existing.save()
     return HttpResponseRedirect("/home/")
   else:
-    stocks = Stock.objects.all().values()
-    user_stock_relation = StockUserRelation.objects.filter(user=user)
-    list_for_template = []
-    for i in stocks:
-      stock_id = i['id']
-      stock_data = cache.get(stock_id)
-      if stock_data is None:
-        continue
-      stock_data = json.loads(stock_data)
-      if  not re.search('Rs', stock_data[0]['l_cur']):
-        continue
-      current_price = stock_data[0]['l_cur']
-      i['current_price'] = current_price
-      if user_stock_relation:
-        stock = Stock.objects.filter(id=stock_id)
-        user_stock = StockUserRelation.objects.filter(user=user, stock=stock)
-        if user_stock:
-          i['max_price'] = user_stock[0].max_price
-          i['min_price'] = user_stock[0].min_price
-          i['alert-set'] = True
-      list_for_template.append(i)
-    #if userinfo:
     return render_to_response('accounts/user-alerts.html', {'result_list': list_for_template}, context_instance=RequestContext(request))
-    #else:
-    #  return render_to_response('accounts/user-alerts.html', context_instance=RequestContext(request))
-    #return HttpResponseRedirect("/home/")
-    #user-stock-relation = StockUserRelation.objects.filter(user=user).values()
 
 @login_required
 def home(request):
-  #html = "<html><body>Successfully logged in as  %s <a href='/logout/'>Log Out</a> </body></html>" % request.user.username
   return render_to_response('accounts/user-home.html', context_instance=RequestContext(request))
-  #return HttpResponse(html)
 
 def invalid(request):
   html = "<html><body>Invalid login credentials</body></html>"

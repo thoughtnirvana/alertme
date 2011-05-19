@@ -16,7 +16,7 @@ def getStockHandle():
   for i in stocks:
     id = i.id
   #  print id
-  cache.set('foo','bar',900)
+  cache.set('foo','bar',1800)
   #for key in stock_dict:
   for key in stocks:
     stock_url = google_url + quote(key.id)
