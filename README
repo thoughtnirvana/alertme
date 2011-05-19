@@ -1,0 +1,13 @@
+Web app built in django to track your favorite stocks via SMS and email. 
+
+Ft-
+* New account creation
+* Settings for existing user - Ph no, Alert preference
+* Alerts - set minimum and maximum limit for the listed stocks
+
+Require-
+* Install PostgreSQL
+* Change the django settings for your DB and syncdb to create tables
+* List the stock codes in DB using one of the files in convinience_files
+* Run update-cache.py and send-alert.py as cron to constantly monitor the stocks
+
