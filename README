@@ -7,6 +7,7 @@ Ft-
 
 Require-
 * Install PostgreSQL
+* Install memcache
 * Change the django settings for your DB and syncdb to create tables
 * List the stock codes in DB using one of the files in convinience_files
 * Run update-cache.py and send-alert.py as cron to constantly monitor the stocks
